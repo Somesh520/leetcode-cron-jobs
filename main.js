@@ -4,7 +4,7 @@ dotenv.config();
 const headers = {
   "Content-Type": "application/json",
   Referer: "https://leetcode.com/problems/two-sum/",
-  "x-csrftoken": process.env.CSRTOKEN,
+  "x-csrftoken": process.env.CSRFTOKEN || process.env.CSRTOKEN,
   "Cookie": process.env.COOKIE,
   "User-Agent":
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",

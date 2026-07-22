@@ -1,0 +1,37 @@
+name: LeetCode Cron Bot
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+  workflow_dispatch:
+
+
+jobs:
+
+  run-bot:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+
+      - name: Install dependencies
+        run: npm install
+
+
+      - name: Run bot
+        env:
+          X_CSRFTOKEN: ${{ secrets.X_CSRFTOKEN }}
+          LEETCODE_COOKIE: ${{ secrets.LEETCODE_COOKIE }}
+
+        run: node server.js

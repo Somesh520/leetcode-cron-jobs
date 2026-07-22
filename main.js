@@ -2,9 +2,6 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log("DEBUG: CSRFTOKEN length:", process.env.CSRFTOKEN ? process.env.CSRFTOKEN.length : 0);
-console.log("DEBUG: COOKIE length:", process.env.COOKIE ? process.env.COOKIE.length : 0);
-
 const headers = {
   "Content-Type": "application/json",
   Referer: "https://leetcode.com/problems/two-sum/",

@@ -22,10 +22,10 @@ async function runTask() {
       return date === today;
     });
 
-    // if (solvedToday) {
-    //   console.log("Already solved today");
-    //   return;
-    // }
+    if (solvedToday) {
+      console.log("Already solved today");
+      return;
+    }
 
     console.log("No submission today. Submitting...");
     const result = await leetcoderesult();

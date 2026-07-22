@@ -31,7 +31,6 @@ jobs:
 
       - name: Run bot
         env:
-          env:
           CSRFTOKEN: ${{ secrets.CSRFTOKEN }}
           COOKIE: ${{ secrets.COOKIE }}
 

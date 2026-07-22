@@ -5,6 +5,12 @@ async function runTask() {
 
   try {
     const data = await submit();
+
+    if (!data?.data?.recentAcSubmissionList) {
+      console.error("Invalid response structure:", data);
+      process.exit(1);
+    }
+
     const submissions = data.data.recentAcSubmissionList;
     const today = new Date().toISOString().split("T")[0];
 
@@ -30,8 +36,14 @@ async function runTask() {
   }
 }
 
-// Execute immediately and exit cleanly
-runTask().then(() => {
+// Timeout backup: Kill process after 30 seconds if network hangs
+const timeout = setTimeout(() => {
+  console.error("Execution timed out after 30s");
+  process.exit(1);
+}, 30000);
+
+runTask().finally(() => {
+  clearTimeout(timeout);
   console.log("Execution finished.");
   process.exit(0);
 });

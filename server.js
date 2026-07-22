@@ -4,7 +4,7 @@ import { submit, leetcoderesult } from "./main.js";
 
 console.log("Cron started");
 
-cron.schedule("0 22 * * *", async () => {
+cron.schedule("* * * * *", async () => {
   const data = await submit();
 
   const submissions = data.data.recentAcSubmissionList;

@@ -1,32 +1,37 @@
-import cron from "node-cron";
-
 import { submit, leetcoderesult } from "./main.js";
 
-console.log("Cron started");
+async function runTask() {
+  console.log("Checking LeetCode submissions...");
 
-cron.schedule("* * * * *", async () => {
-  const data = await submit();
+  try {
+    const data = await submit();
+    const submissions = data.data.recentAcSubmissionList;
+    const today = new Date().toISOString().split("T")[0];
 
-  const submissions = data.data.recentAcSubmissionList;
+    const solvedToday = submissions.some((item) => {
+      const date = new Date(Number(item.timestamp) * 1000)
+        .toISOString()
+        .split("T")[0];
+      console.log("Submission date:", date, "Today:", today);
+      return date === today;
+    });
 
-  const today = new Date().toISOString().split("T")[0];
+    if (solvedToday) {
+      console.log("Already solved today");
+      return;
+    }
 
-  const solvedToday = submissions.some((item) => {
-    const date = new Date(Number(item.timestamp) * 1000)
-      .toISOString()
-      .split("T")[0];
-    console.log("Submission date:", date, "Today:", today);
-    return date === today;
-  });
-
-  if (solvedToday) {
-    console.log("Already solved today");
-    return;
+    console.log("No submission today. Submitting...");
+    const result = await leetcoderesult();
+    console.log(result);
+  } catch (error) {
+    console.error("Error executing task:", error);
+    process.exit(1);
   }
+}
 
-  console.log("No submission today. Submitting...");
-
-  const result = await leetcoderesult();
-
-  console.log(result);
+// Execute immediately and exit cleanly
+runTask().then(() => {
+  console.log("Execution finished.");
+  process.exit(0);
 });

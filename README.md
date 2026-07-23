@@ -35,17 +35,25 @@ Click the **Fork** button at the top right of this repository to create your own
 
 ![How to find Cookie and CSRF Token]
 
-### 3. Add GitHub Secrets
+### 3. Setup Email Notifications (Required for alerts)
+To get email alerts for successful submissions or failures, you need an App Password:
+1. Go to your Google Account -> **Security**.
+2. Enable **2-Step Verification**.
+3. Create an **App Password** for this bot.
+
+### 4. Add GitHub Secrets
 1. Go to your forked repository on GitHub.
 2. Navigate to **Settings** -> **Secrets and variables** -> **Actions**.
 3. Click **New repository secret**.
-4. Add the following two secrets:
+4. Add the following four secrets:
    - Name: `CSRFTOKEN` | Value: *(Paste your x-csrftoken here)*
    ![Alt Text](./csfrtoken.png)
-   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* ![Alt Text](./Cookie.png)
-   
+   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* 
+   ![Alt Text](./Cookie.png)
+   - Name: `SMTP_USER` | Value: *(Your Gmail address, e.g., your.email@gmail.com)*
+   - Name: `SMTP_PASS` | Value: *(The 16-character App Password you generated in Step 3)*
 
-### 4. Enable GitHub Actions
+### 5. Enable GitHub Actions
 1. Go to the **Actions** tab in your repository.
 2. Click the button to **Enable workflows**.
 3. (Optional) You can click on the "LeetCode Cron Bot" workflow and click **Run workflow** to test it manually!

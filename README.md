@@ -44,6 +44,9 @@ To get email alerts for successful submissions or failures, you need an App Pass
 ### 4. Add GitHub Secrets
 1. Go to your forked repository on GitHub.
 2. Navigate to **Settings** -> **Secrets and variables** -> **Actions**.
+[Alt Text](./s1.png)
+[Alt Text](./s2.png)
+[Alt Text](./s3.png)
 3. Click **New repository secret**.
 4. Add the following four secrets:
    - Name: `CSRFTOKEN` | Value: *(Paste your x-csrftoken here)*

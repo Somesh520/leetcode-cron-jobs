@@ -1,12 +1,13 @@
 import axios from "axios";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const headers = {
   "Content-Type": "application/json",
   Referer: "https://leetcode.com/problems/two-sum/",
   "x-csrftoken": process.env.CSRFTOKEN || process.env.CSRTOKEN,
-  "Cookie": process.env.COOKIE,
+  Cookie: process.env.COOKIE,
   "User-Agent":
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
 };
@@ -48,25 +49,35 @@ public:
       headers,
     });
 
+    if (!response.data?.submission_id) {
+      throw new Error("LeetCode did not return submission id");
+    }
+
     console.log("Submission created:", response.data.submission_id);
 
     return response.data;
   } catch (error) {
-    console.log("Submission error:", error.response?.data || error.message);
+    if (error.response?.status === 401) {
+      throw new Error("LeetCode authentication failed. Cookie expired.");
+    }
 
-    return null;
+    if (error.response?.status === 403) {
+      throw new Error(
+        "LeetCode access forbidden. Cookie or CSRF token invalid.",
+      );
+    }
+
+    throw new Error(
+      `LeetCode submission failed: ${
+        error.response?.data?.message || error.message
+      }`,
+    );
   }
 };
 
 export const leetcoderesult = async () => {
   try {
     const submission = await leetcode();
-
-    if (!submission) {
-      console.log("Submission failed");
-
-      return null;
-    }
 
     const id = submission.submission_id;
 
@@ -87,18 +98,18 @@ export const leetcoderesult = async () => {
         return data;
       }
 
+      if (data.state === "FAILURE") {
+        throw new Error("LeetCode submission rejected");
+      }
+
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       attempts++;
     }
 
-    return {
-      message: "Timeout",
-    };
+    throw new Error("LeetCode submission result timeout");
   } catch (error) {
-    console.log(error.response?.data || error.message);
-
-    return null;
+    throw error;
   }
 };
 
@@ -136,12 +147,28 @@ export const submit = async () => {
       headers,
     });
 
+    if (!response.data?.data?.recentAcSubmissionList) {
+      throw new Error("Invalid LeetCode submissions response");
+    }
+
     return response.data;
   } catch (error) {
-    console.log("GraphQL error:", error.response?.data || error.message);
+    if (error.response?.status === 401) {
+      throw new Error(
+        "LeetCode authentication failed while checking submissions. Cookie expired.",
+      );
+    }
 
-    return null;
+    if (error.response?.status === 403) {
+      throw new Error(
+        "LeetCode blocked request. Cookie or CSRF token invalid.",
+      );
+    }
+
+    throw new Error(
+      `LeetCode check failed: ${
+        error.response?.data?.message || error.message
+      }`,
+    );
   }
 };
-
-

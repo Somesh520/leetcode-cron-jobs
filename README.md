@@ -28,8 +28,8 @@ Click the **Fork** button at the top right of this repository to create your own
 3. Go to the **Network** tab.
 4. Refresh the page and click on any request sent to `leetcode.com` (like `graphql`).
 5. Scroll down to **Request Headers**.
-6. Copy the entire `cookie` string.
-7. Also, look for `x-csrftoken` in the headers and copy its value.
+6. Copy the entire `cookie` string.![Alt Text](./Cookie.png)
+7. Also, look for `x-csrftoken` in the headers and copy its value. ![Alt Text](./csfrtoken.png)
 
 *(See the screenshot below for reference)*
 
@@ -47,9 +47,9 @@ To get email alerts for successful submissions or failures, you need an App Pass
 3. Click **New repository secret**.
 4. Add the following four secrets:
    - Name: `CSRFTOKEN` | Value: *(Paste your x-csrftoken here)*
-   ![Alt Text](./csfrtoken.png)
+  
    - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* 
-   ![Alt Text](./Cookie.png)
+   
    - Name: `SMTP_USER` | Value: *(Your Gmail address, e.g., your.email@gmail.com)*
    - Name: `SMTP_PASS` | Value: *(The 16-character App Password you generated in Step 3)*
 

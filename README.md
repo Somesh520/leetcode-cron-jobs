@@ -31,13 +31,19 @@ Click the **Fork** button at the top right of this repository to create your own
 6. Copy the entire `cookie` string.
 7. Also, look for `x-csrftoken` in the headers and copy its value.
 
+*(See the screenshot below for reference)*
+
+![How to find Cookie and CSRF Token]
+
 ### 3. Add GitHub Secrets
 1. Go to your forked repository on GitHub.
 2. Navigate to **Settings** -> **Secrets and variables** -> **Actions**.
 3. Click **New repository secret**.
 4. Add the following two secrets:
    - Name: `CSRFTOKEN` | Value: *(Paste your x-csrftoken here)*
-   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)*
+   (./Cookie.png)
+   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* (./csfrtoken.png)
+   
 
 ### 4. Enable GitHub Actions
 1. Go to the **Actions** tab in your repository.

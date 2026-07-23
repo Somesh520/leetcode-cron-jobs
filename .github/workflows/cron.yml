@@ -33,7 +33,7 @@ jobs:
         env:
           CSRFTOKEN: ${{ secrets.CSRFTOKEN }}
           COOKIE: ${{ secrets.COOKIE }}
-          SMTP_USER:${{ secrets.SMTP_USER }}
-          SMTP_PASS:${{ secrets.SMTP_PASS}}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS}}
 
         run: node server.js

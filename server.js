@@ -1,61 +1,62 @@
 import { submit, leetcoderesult } from "./main.js";
 import { transporter } from "./nodemailer.js";
 
-async function sendErrorMail(error) {
+async function sendMail(title, message, isError = false) {
   await transporter.sendMail({
     from: `"LeetCode Bot" <${process.env.SMTP_USER}>`,
+
     to: "someshtiwari532@gmail.com",
-    subject: "🚨 LeetCode Bot Failed",
+
+    subject: isError
+      ? "🚨 LeetCode Bot Failed"
+      : "✅ LeetCode Solution Accepted",
 
     html: `
-      <div style="font-family: Arial, sans-serif;">
+      <div style="font-family:Arial,sans-serif;">
 
-        <h2 style="color:red;">
-          LeetCode Automation Failed
+        <h2 style="color:${isError ? "red" : "green"};">
+          ${title}
         </h2>
 
-        <p>
-          Your daily LeetCode automation task failed while trying to check or submit a solution.
-        </p>
-
-        <hr />
-
-        <h3>Error Details</h3>
 
         <p>
           <b>Time:</b>
           ${new Date().toLocaleString()}
         </p>
 
+
         <p>
-          <b>Reason:</b>
+          <b>Details:</b>
         </p>
+
 
         <pre style="
           background:#f4f4f4;
-          padding:10px;
-          border-radius:5px;
+          padding:12px;
+          border-radius:6px;
         ">
-${error.message}
+${message}
         </pre>
 
 
-        <h3>Possible Causes</h3>
+        ${
+          isError
+            ? `
+              <h3>Possible Causes</h3>
 
-        <ul>
-          <li>LeetCode session cookie expired.</li>
-          <li>CSRF token is invalid or expired.</li>
-          <li>LeetCode blocked the automated request.</li>
-          <li>Network request failed.</li>
-        </ul>
+              <ul>
+                <li>LeetCode cookie expired.</li>
+                <li>CSRF token expired.</li>
+                <li>LeetCode blocked request.</li>
+                <li>Network issue.</li>
+              </ul>
 
-
-        <h3>Action Required</h3>
-
-        <p>
-          Update the LeetCode cookies and CSRF token in the environment variables,
-          then restart the cron job.
-        </p>
+              <p>
+                Update COOKIE and CSRFTOKEN secrets.
+              </p>
+            `
+            : ""
+        }
 
 
         <hr />
@@ -66,15 +67,6 @@ ${error.message}
 
       </div>
     `,
-  });
-}
-async function sendMail(result) {
-  await transporter.sendMail({
-    from: `"LeetCode Bot" <${process.env.SMTP_USER}>`,
-    to: "someshtiwari532@gmail.com",
-    subject: "🚨 LeetCode Bot Failed",
-    text:`successforlly  result here ${result} `
-   
   });
 }
 
@@ -102,23 +94,47 @@ async function runTask() {
       return date === today;
     });
 
-    // if (solvedToday) {
-    //   console.log("Already solved today");
+    if (solvedToday) {
+      console.log("Already solved today");
 
-    //   return;
-    // }
+      return;
+    }
 
     console.log("No submission today. Submitting...");
 
     const result = await leetcoderesult();
 
-    console.log("Submission result:", result);
-    await sendMail(result.status_msg);
+    if (!result) {
+      throw new Error("No response from LeetCode submission");
+    }
+
+    if (result.status_msg !== "Accepted") {
+      throw new Error(result.status_msg || "Submission rejected");
+    }
+
+    await sendMail(
+      "LeetCode Solution Accepted",
+
+      `
+Status: ${result.status_msg}
+
+Submission ID:
+${result.submission_id || "N/A"}
+      `,
+    );
+
+    console.log("Success email sent");
   } catch (error) {
     console.error("Cron Error:", error.message);
 
     try {
-      await sendErrorMail(error);
+      await sendMail(
+        "LeetCode Automation Failed",
+
+        error.message,
+
+        true,
+      );
     } catch (mailError) {
       console.error("Email Error:", mailError.message);
     }

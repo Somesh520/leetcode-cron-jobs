@@ -41,8 +41,8 @@ Click the **Fork** button at the top right of this repository to create your own
 3. Click **New repository secret**.
 4. Add the following two secrets:
    - Name: `CSRFTOKEN` | Value: *(Paste your x-csrftoken here)*
-   (./Cookie.png)
-   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* (./csfrtoken.png)
+   ![Alt Text](./csfrtoken.png)
+   - Name: `COOKIE` | Value: *(Paste your entire cookie string here)* ![Alt Text](./Cookie.png)
    
 
 ### 4. Enable GitHub Actions

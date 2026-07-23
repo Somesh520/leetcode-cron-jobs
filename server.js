@@ -68,6 +68,15 @@ ${error.message}
     `,
   });
 }
+async function sendMail(result) {
+  await transporter.sendMail({
+    from: `"LeetCode Bot" <${process.env.SMTP_USER}>`,
+    to: "someshtiwari532@gmail.com",
+    subject: "🚨 LeetCode Bot Failed",
+    text:`successforlly  result here ${result} `
+   
+  });
+}
 
 async function runTask() {
   try {
@@ -104,6 +113,7 @@ async function runTask() {
     const result = await leetcoderesult();
 
     console.log("Submission result:", result);
+    await sendMail(result.status_msg);
   } catch (error) {
     console.error("Cron Error:", error.message);
 
